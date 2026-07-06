@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/XPGem.tscn" id="2"]
-[ext_resource type="Script" path="res://scripts/pixel_sprite.gd" id="3"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 17.0
@@ -13,11 +12,12 @@ collision_layer = 2
 collision_mask = 1
 xp_gem_scene = ExtResource("2")
 
-[node name="PixelSprite" type="Node2D" parent="."]
-position = Vector2(-32, -32)
-script = ExtResource("3")
-sprite_kind = "slime"
-pixel_size = 2.0
+[node name="Body" type="ColorRect" parent="."]
+offset_left = -14.0
+offset_top = -14.0
+offset_right = 14.0
+offset_bottom = 14.0
+color = Color(0.76, 0.18, 0.2, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
