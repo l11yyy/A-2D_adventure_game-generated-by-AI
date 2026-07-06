@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3 uid="uid://player"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/Projectile.tscn" id="2"]
+[ext_resource type="Texture2D" path="res://assets/player_adventurer_sheet.svg" id="3"]
+[ext_resource type="Texture2D" path="res://assets/melee_slash_sheet.svg" id="4"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 16.0
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(58, 34)
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1")
+collision_layer = 1
+collision_mask = 2
+projectile_scene = ExtResource("2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3")
+hframes = 4
+texture_filter = 1
+scale = Vector2(2, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
+[node name="MeleeArea" type="Area2D" parent="."]
+position = Vector2(48, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MeleeArea"]
+shape = SubResource("2")
+
+[node name="SlashSprite" type="Sprite2D" parent="."]
+position = Vector2(42, 0)
+texture = ExtResource("4")
+hframes = 4
+texture_filter = 1
+scale = Vector2(2, 2)
+visible = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+limit_left = -1600
+limit_top = -1100
+limit_right = 1600
+limit_bottom = 1100
+
+[node name="MeleeCooldown" type="Timer" parent="."]
+one_shot = true
+wait_time = 0.45
+
+[node name="RangedCooldown" type="Timer" parent="."]
+one_shot = true
+wait_time = 0.28
+
+[connection signal="body_entered" from="MeleeArea" to="." method="_on_melee_area_body_entered"]
