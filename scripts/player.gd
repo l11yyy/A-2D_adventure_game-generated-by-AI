@@ -9,7 +9,6 @@ signal stats_changed(level: int, xp: int, xp_to_next: int, hp: int, max_hp: int)
 @export var ranged_damage := 9
 @export var xp_to_next_level := 5
 @export var projectile_scene: PackedScene
-@export var world_half_size := Vector2(1600, 1100)
 
 var hp := max_hp
 var level := 1
@@ -20,8 +19,6 @@ var last_facing := Vector2.RIGHT
 @onready var melee_shape: CollisionShape2D = $MeleeArea/CollisionShape2D
 @onready var ranged_cooldown: Timer = $RangedCooldown
 @onready var melee_cooldown: Timer = $MeleeCooldown
-@onready var sprite: Sprite2D = $Sprite2D
-@onready var slash_sprite: Sprite2D = $SlashSprite
 
 func _ready() -> void:
 	hp = max_hp
@@ -34,10 +31,7 @@ func _physics_process(_delta: float) -> void:
 		last_facing = input_vector.normalized()
 	velocity = input_vector * speed
 	move_and_slide()
-	global_position.x = clamp(global_position.x, -world_half_size.x, world_half_size.x)
-	global_position.y = clamp(global_position.y, -world_half_size.y, world_half_size.y)
 	rotation = 0.0
-	animate_walk(input_vector)
 
 func _process(_delta: float) -> void:
 	if Input.is_action_pressed("attack_melee") and melee_cooldown.is_stopped():
@@ -48,15 +42,9 @@ func _process(_delta: float) -> void:
 func perform_melee_attack() -> void:
 	melee_cooldown.start()
 	melee_area.rotation = last_facing.angle()
-	slash_sprite.rotation = last_facing.angle()
-	slash_sprite.visible = true
-	for frame_index in range(4):
-		slash_sprite.frame = frame_index
-		if frame_index == 1:
-			melee_shape.disabled = false
-		await get_tree().create_timer(0.045).timeout
+	melee_shape.disabled = false
+	await get_tree().create_timer(0.12).timeout
 	melee_shape.disabled = true
-	slash_sprite.visible = false
 
 func perform_ranged_attack() -> void:
 	if projectile_scene == null:
@@ -67,14 +55,6 @@ func perform_ranged_attack() -> void:
 	projectile.direction = last_facing
 	projectile.damage = ranged_damage
 	get_tree().current_scene.add_child(projectile)
-
-func animate_walk(input_vector: Vector2) -> void:
-	if input_vector.x != 0.0:
-		sprite.flip_h = input_vector.x < 0.0
-	if input_vector.length() == 0.0:
-		sprite.frame = 0
-	else:
-		sprite.frame = int(Time.get_ticks_msec() / 140) % 4
 
 func gain_xp(amount: int) -> void:
 	xp += amount

@@ -6,9 +6,6 @@ class_name Enemy
 @export var contact_damage := 8
 @export var xp_value := 1
 @export var xp_gem_scene: PackedScene
-@export var flying := false
-
-@onready var sprite: Sprite2D = $Sprite2D
 
 var hp := max_hp
 var target: Node2D
@@ -23,12 +20,6 @@ func _physics_process(_delta: float) -> void:
 	var direction := global_position.direction_to(target.global_position)
 	velocity = direction * speed
 	move_and_slide()
-	animate_enemy(direction)
-
-func animate_enemy(direction: Vector2) -> void:
-	if direction.x != 0.0:
-		sprite.flip_h = direction.x < 0.0
-	sprite.frame = int(Time.get_ticks_msec() / (90 if flying else 180)) % 4
 
 func take_damage(amount: int) -> void:
 	hp -= amount
