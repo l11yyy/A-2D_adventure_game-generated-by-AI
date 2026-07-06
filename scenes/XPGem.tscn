@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://xpgem"]
+
+[ext_resource type="Script" path="res://scripts/xp_gem.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/pixel_sprite.gd" id="2"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 9.0
+
+[node name="XPGem" type="Area2D"]
+script = ExtResource("1")
+collision_layer = 8
+collision_mask = 1
+
+[node name="PixelSprite" type="Node2D" parent="."]
+position = Vector2(-16, -16)
+script = ExtResource("2")
+sprite_kind = "gem"
+pixel_size = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
